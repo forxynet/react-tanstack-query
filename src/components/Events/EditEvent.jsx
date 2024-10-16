@@ -11,8 +11,10 @@ export default function EditEvent() {
   const navigate = useNavigate();
   const params = useParams();
 
+  const queryKeyArg = ['events', params.id];
+
   const { data, isPending, isError, error } = useQuery({
-    queryKey: ['events', params.id],
+    queryKey: queryKeyArg,
     queryFn: ({ signal }) => fetchEvent({ signal, id: params.id }),
   });
 
@@ -21,18 +23,18 @@ export default function EditEvent() {
     onMutate: async (data) => {
       const newEvent = data.event;
 
-      await queryClient.cancelQueries({ queryKey: ['events', params.id] });
-      const previousEvent = queryClient.getQueryData(['events', params.id]);
+      await queryClient.cancelQueries({ queryKey: queryKeyArg });
+      const previousEvent = queryClient.getQueryData(queryKeyArg);
 
-      queryClient.setQueryData(['events', params.id], newEvent);
+      queryClient.setQueryData(queryKeyArg, newEvent);
 
       return { previousEvent };
     },
     onError: (error, data, context) => {
-      queryClient.setQueryData(['events', params.id], context.previousEvent);
+      queryClient.setQueryData(queryKeyArg, context.previousEvent);
     },
     onSettled: () => {
-      queryClient.invalidateQueries(['events', params.id]);
+      queryClient.invalidateQueries(queryKeyArg);
     }
   });
 

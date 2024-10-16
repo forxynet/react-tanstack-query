@@ -6,11 +6,11 @@ import ErrorBlock from '../UI/ErrorBlock.jsx';
 import EventItem from './EventItem.jsx';
 
 export default function FindEventSection() {
-  const searchElement = useRef();  
+  const searchElement = useRef();
   const [searchTerm, setSearchTerm] = useState();
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ['events', {search: searchTerm}],
+    queryKey: ['events', { search: searchTerm }],
     queryFn: ({ signal }) => fetchEvents({ signal, searchTerm }),
     enabled: searchTerm !== undefined
   });
@@ -29,9 +29,9 @@ export default function FindEventSection() {
   if (isError) {
     content =
       <ErrorBlock
-      title='An error occurred'
-      message={error.info?.message || 'Failed to fetch events.'}
-    />
+        title='An error occurred'
+        message={error.info?.message || 'Failed to fetch events.'}
+      />
   }
 
   if (data) {
@@ -47,18 +47,20 @@ export default function FindEventSection() {
 
   return (
     <section className="content-section" id="all-events-section">
-      <header>
-        <h2>Find your next event!</h2>
-        <form onSubmit={handleSubmit} id="search-form">
-          <input
-            type="search"
-            placeholder="Search events"
-            ref={searchElement}
-          />
-          <button>Search</button>
-        </form>
-      </header>
-      {content}
+      <div className='center'>
+        <header>
+          <h2 >Find your next event!</h2>
+          <form onSubmit={handleSubmit} id="search-form">
+            <input
+              type="search"
+              placeholder="Search events"
+              ref={searchElement}
+            />
+            <button>Search</button>
+          </form>
+        </header>
+        {content}
+      </div>
     </section>
   );
 }
